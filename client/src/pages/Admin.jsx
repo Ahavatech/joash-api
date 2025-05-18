@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import AdminDashboard from '../components/Admin/AdminDashboard';
+import Dashboard from '../components/Admin/Dashboard';
 import EditProjects from '../components/Admin/EditProjects';
 import EditBio from '../components/Admin/EditBio';
 import EditSkills from '../components/Admin/EditSkills';
@@ -11,7 +11,7 @@ const Admin = () => {
     <div className="admin">
       <h1>Admin Panel</h1>
       <Routes>
-        <Route index element={<AdminDashboard />} />
+        <Route index element={<Dashboard />} />
         <Route path="edit-projects" element={<EditProjects />} />
         <Route path="edit-bio" element={<EditBio />} />
         <Route path="edit-skills" element={<EditSkills />} />

@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const adminRoutes = require('./routes/admin');
+const profileImageRoutes = require('./routes/profileImage');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 require('dotenv').config();
@@ -22,6 +24,10 @@ app.use('/api/projects', require('./routes/projects'));
 app.use('/api/skills', require('./routes/skills'));
 app.use('/api/bio', require('./routes/bio'));
 app.use('/api/about', require('./routes/about'));
+app.use('/api/contact', require('./routes/contact'));
+app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/admin', profileImageRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error Handler
 app.use(errorHandler);

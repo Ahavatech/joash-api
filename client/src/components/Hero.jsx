@@ -1,12 +1,13 @@
 import React from 'react';
 import '../styles/Hero.css';
 
-const Hero = () => {
+const Hero = ({ profileImage }) => {
+  const defaultImage = "https://res.cloudinary.com/ddcvkggle/image/upload/v1746705287/cld-sample-4.jpg";
   return (
-    <section className="hero">
+    <section className="hero" id="hero">
       <div className="hero-content">
         <div className="hero-text">
-          <h1>Hey, I'm Joash</h1>
+          <h1>Hey, I'm Joash<span className="wave">👋</span></h1>
           <div className="title-container">
             <div className="title-nocode">
               <span className="highlight">No</span>Code
@@ -25,7 +26,14 @@ const Hero = () => {
         <div className="hero-image">
           <div className="profile-circle">
             <div className="profile-image">
-              <img src="/path-to-profile-image.jpg" alt="Joash" />
+              <img 
+                src={profileImage || defaultImage} 
+                alt="Joash"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = defaultImage;
+                }}
+              />
             </div>
           </div>
         </div>
