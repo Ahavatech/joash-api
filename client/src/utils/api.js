@@ -102,6 +102,16 @@ export const getReviews = async () => {
 
 // Add these new functions after the existing exports
 
+export const getProfile = async () => {
+  try {
+    const response = await api.get('/admin/profile');
+    return response.data;
+  } catch (error) {
+    console.error('Error getting profile:', error);
+    return null;
+  }
+};
+
 export const uploadProfileImage = async (file) => {
   const formData = new FormData();
   formData.append('profileImage', file);
@@ -121,13 +131,14 @@ export const uploadProfileImage = async (file) => {
 
 export const getProfileImage = async () => {
   try {
-    const response = await api.get('/admin/profile-image');
-    return response.data;
+    const profile = await getProfile();
+    return { imageUrl: profile?.imageUrl || null };
   } catch (error) {
-    console.warn('Error getting profile image:', error);
-    return { imageUrl: '/default-profile.jpg' };
+    console.error('Error getting profile image:', error);
+    return { imageUrl: null };
   }
 };
+
 
 export const deleteProfileImage = async () => {
   try {
@@ -135,6 +146,18 @@ export const deleteProfileImage = async () => {
     return response.data;
   } catch (error) {
     console.error('Error deleting profile image:', error);
+    throw error;
+  }
+};
+
+// ...existing code...
+
+export const updateProfile = async (profileData) => {
+  try {
+    const response = await api.put('/admin/profile', profileData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating profile:', error);
     throw error;
   }
 };

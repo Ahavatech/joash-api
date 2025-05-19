@@ -4,6 +4,19 @@ import '../../styles/Admin/EditAbout.css';
 
 const EditAbout = () => {
   const [formData, setFormData] = useState({
+    fullContent: '',
+    keywords: [
+      'NoCode solutions expert',
+      'functional, user-friendly digital products',
+      'Bubble.io',
+      'Figma',
+      'automation tools',
+      'responsive, scalable MVPs',
+      'landing pages',
+      'automated workflows',
+      'sleek websites',
+      'AI-powered tools like OpenAI'
+    ],
     name: '',
     role: '',
     description: '',
@@ -21,7 +34,10 @@ const EditAbout = () => {
     try {
       const data = await getAbout();
       if (data) {
-        setFormData(data);
+        setFormData(prev => ({
+          ...prev,
+          ...data
+        }));
       }
     } catch (err) {
       setError('Failed to fetch about data');
@@ -51,61 +67,72 @@ const EditAbout = () => {
     }));
   };
 
+  const handleKeywordChange = (index, value) => {
+    const newKeywords = [...formData.keywords];
+    newKeywords[index] = value;
+    setFormData(prev => ({
+      ...prev,
+      keywords: newKeywords
+    }));
+  };
+
+  const addKeyword = () => {
+    setFormData(prev => ({
+      ...prev,
+      keywords: [...prev.keywords, '']
+    }));
+  };
+
+  const removeKeyword = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      keywords: prev.keywords.filter((_, i) => i !== index)
+    }));
+  };
+
   return (
     <div className="edit-about">
       <h2>Edit About Section</h2>
       {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="role">Role</label>
-          <input
-            type="text"
-            id="role"
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="fullContent">Full Content</label>
           <textarea
-            id="description"
-            name="description"
-            value={formData.description}
+            id="fullContent"
+            name="fullContent"
+            value={formData.fullContent}
             onChange={handleChange}
-            rows={4}
+            rows={8}
+            placeholder="Enter the complete about section text here..."
           />
         </div>
+
         <div className="form-group">
-          <label htmlFor="experience">Experience</label>
-          <textarea
-            id="experience"
-            name="experience"
-            value={formData.experience}
-            onChange={handleChange}
-            rows={4}
-          />
+          <label>Keywords (Highlighted Terms)</label>
+          <div className="keywords-list">
+            {formData.keywords.map((keyword, index) => (
+              <div key={index} className="keyword-item">
+                <input
+                  type="text"
+                  value={keyword}
+                  onChange={(e) => handleKeywordChange(index, e.target.value)}
+                  placeholder="Enter keyword"
+                />
+                <button 
+                  type="button" 
+                  onClick={() => removeKeyword(index)}
+                  className="remove-keyword"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={addKeyword} className="add-keyword">
+              + Add Keyword
+            </button>
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="mission">Mission</label>
-          <textarea
-            id="mission"
-            name="mission"
-            value={formData.mission}
-            onChange={handleChange}
-            rows={4}
-          />
-        </div>
+
         <button type="submit" className="btn-primary" disabled={loading}>
           {loading ? 'Updating...' : 'Update About'}
         </button>

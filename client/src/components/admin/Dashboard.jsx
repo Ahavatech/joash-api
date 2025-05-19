@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { uploadProfileImage, getProfileImage } from '../../utils/api';
+import { uploadProfileImage, getProfileImage, updateProfile } from '../../utils/api';
 import '../../styles/Admin/Dashboard.css';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [profileData, setProfileData] = useState({
+    name: '',
+    title: '',
+    bio: ''
+  });
   const navigate = useNavigate();
-  const defaultImage = "https://res.cloudinary.com/ddcvkggle/image/upload/v1746705287/cld-sample-4.jpg";
-
+  const defaultImage = "https://res.cloudinary.com/ddcvkggle/image/upload/v1747593098/portfolio/default-profile.jpg";
 
   useEffect(() => {
-    const fetchProfileImage = async () => {
+    const fetchProfileData = async () => {
       try {
-        const { imageUrl } = await getProfileImage();
-        setProfileImage(imageUrl);
+        const profile = await getProfile();
+        setProfileImage(profile?.imageUrl);
+        setProfileData(profile);
       } catch (error) {
-        console.error('Error fetching profile image:', error);
+        console.error('Error fetching profile data:', error);
       }
     };
-    fetchProfileImage();
+    fetchProfileData();
   }, []);
 
   const handleImageUpload = async (e) => {
@@ -36,6 +42,30 @@ const Dashboard = () => {
       alert('Failed to upload image');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProfileData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      setSaving(true);
+      await updateProfile({
+        ...profileData,
+        imageUrl: profileImage
+      });
+      alert('Profile updated successfully!');
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+      alert('Failed to save changes');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -109,7 +139,7 @@ const Dashboard = () => {
                     onChange={handleImageUpload}
                     disabled={uploading}
                   />
-                  <label htmlFor="profile-upload">
+                  <label htmlFor="profile-upload" className={uploading ? 'uploading' : ''}>
                     {uploading ? 'Uploading...' : 'Update Profile Picture'}
                   </label>
                 </div>
@@ -117,20 +147,41 @@ const Dashboard = () => {
               <div className="form-container">
                 <div className="form-group">
                   <label>Name</label>
-                  <input type="text" placeholder="Your Name" />
+                  <input 
+                    type="text" 
+                    name="name"
+                    value={profileData.name}
+                    onChange={handleInputChange}
+                    placeholder="Your Name" 
+                  />
                 </div>
                 <div className="form-group">
                   <label>Title</label>
-                  <input type="text" placeholder="e.g. No-Code Solution Expert" />
+                  <input 
+                    type="text" 
+                    name="title"
+                    value={profileData.title}
+                    onChange={handleInputChange}
+                    placeholder="e.g. No-Code Solution Expert" 
+                  />
                 </div>
                 <div className="form-group">
                   <label>Bio</label>
                   <textarea 
+                    name="bio"
+                    value={profileData.bio}
+                    onChange={handleInputChange}
                     placeholder="Write a short bio..."
                     rows={4}
                   ></textarea>
                 </div>
-                <button className="save-btn">Save Changes</button>
+                <button 
+                  className="save-btn"
+                  onClick={handleSaveChanges}
+                  disabled={saving}
+                >
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </button>
               </div>
             </div>
           </section>
