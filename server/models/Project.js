@@ -1,11 +1,22 @@
 const mongoose = require('mongoose');
 
-const ProjectSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  image: { type: String, required: true },
-  link: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-});
+const projectSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  details: {
+    type: String,
+    required: true
+  },
+  imageUrl: {
+    type: String,
+    required: true
+  },
+  link: {
+    type: String,
+    required: true
+  }
+}, { timestamps: true });
 
-module.exports = mongoose.model('Project', ProjectSchema);
+module.exports = mongoose.model('Project', projectSchema);

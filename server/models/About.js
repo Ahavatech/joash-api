@@ -5,10 +5,16 @@ const aboutSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  keywords: [{
+    text: {
+      type: String,
+      required: true
+    },
+    highlighted: {
+      type: Boolean,
+      default: true
+    }
+  }]
+}, { timestamps: true });
 
 module.exports = mongoose.model('About', aboutSchema);

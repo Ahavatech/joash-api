@@ -55,20 +55,20 @@ export const updateAbout = async (data) => {
       },
       body: JSON.stringify({
         content: data.content,
-        keywords: data.keywords.map(k => ({
-          text: k.text,
-          highlighted: Boolean(k.highlighted)
-        }))
+        keywords: data.keywords
       }),
+      credentials: 'include' // Include if you're using session-based auth
     });
 
     if (!response.ok) {
-      throw new Error('Failed to update about section');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const result = await response.json();
+    return result;
+
   } catch (error) {
-    console.error('Update Error:', error);
+    console.error('API Error:', error);
     throw error;
   }
 };
@@ -124,30 +124,24 @@ export const getReviews = async () => {
 
 // Add these new functions after the existing exports
 
+export const uploadProfileImage = async (formData) => {
+  try {
+    const response = await api.post('/admin/upload-profile', formData);
+    console.log('Upload response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Upload error:', error);
+    throw error;
+  }
+};
+
 export const getProfile = async () => {
   try {
     const response = await api.get('/admin/profile');
     return response.data;
   } catch (error) {
-    console.error('Error getting profile:', error);
+    console.error('Profile fetch error:', error);
     return null;
-  }
-};
-
-export const uploadProfileImage = async (file) => {
-  const formData = new FormData();
-  formData.append('profileImage', file);
-
-  try {
-    const response = await api.post('/admin/upload-profile', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error uploading profile image:', error);
-    throw error;
   }
 };
 
@@ -172,14 +166,22 @@ export const deleteProfileImage = async () => {
   }
 };
 
-// ...existing code...
-
-export const updateProfile = async (profileData) => {
+export const updateProfile = async (data) => {
   try {
-    const response = await api.put('/admin/profile', profileData);
-    return response.data;
+    const response = await fetch('/api/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        imageUrl: data.imageUrl,
+        shortBio: data.shortBio
+      }),
+    });
+
+    if (!response.ok) throw new Error('Failed to update profile');
+    return await response.json();
   } catch (error) {
-    console.error('Error updating profile:', error);
     throw error;
   }
 };
@@ -189,6 +191,33 @@ export const updateCredentials = async (credentials) => {
     const response = await api.post('/admin/update-credentials', credentials);
     return response.data;
   } catch (error) {
+    throw error;
+  }
+};
+// ...existing code...
+
+export const addProject = async (formData) => {
+  try {
+    const response = await api.post('/admin/projects', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding project:', error);
+    throw error;
+  }
+};
+
+// ...existing code...
+
+export const deleteProject = async (projectId) => {
+  try {
+    await api.delete(`/admin/projects/${projectId}`);
+    return true;
+  } catch (error) {
+    console.error('Error deleting project:', error);
     throw error;
   }
 };

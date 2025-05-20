@@ -76,20 +76,35 @@ const EditAbout = () => {
     try {
       setSaving(true);
       setError(null);
-      await updateAbout({
+      
+      // Create a properly formatted data object
+      const dataToSave = {
         content: content.trim(),
         keywords: keywords.map(k => ({
-        text: k.text,
-        highlighted: k.highlighted}))
-      });
-      setSaving(false);
+          text: k.text,
+          highlighted: Boolean(k.highlighted)
+        }))
+      };
+
+      // Debug log to verify data being sent
+      console.log('Saving data:', dataToSave);
+
+      const response = await updateAbout(dataToSave);
+      
+      // Verify save was successful
+      if (response) {
+        console.log('Save successful:', response);
+        // Refresh the content to ensure we have the latest data
+        await fetchAboutContent();
+      }
+
     } catch (error) {
+      console.error('Save error:', error);
       setError('Failed to save changes. Please try again.');
-      console.error('Error updating about content:', error);
     } finally {
       setSaving(false);
     }
-  };
+};
 
   if (loading) {
     return (

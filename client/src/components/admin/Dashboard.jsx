@@ -4,7 +4,7 @@ import { getProfile, uploadProfileImage, updateProfile } from '../../utils/api';
 import EditAbout from './EditAbout';
 import EditSkills from './EditSkills';
 import EditProjects from './EditProjects';
-import EditReviews from '../Admin/EditReviews';
+import EditReviews from './EditReviews';
 import '../../styles/Admin/Dashboard.css';
 
 const Dashboard = () => {
@@ -13,14 +13,11 @@ const Dashboard = () => {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  const [profileData, setProfileData] = useState({
-    name: '',
-    title: '',
-    bio: ''
-  });
+  const [shortBio, setShortBio] = useState('');
+  const [error, setError] = useState(null);
   
   const navigate = useNavigate();
-  const defaultImage = "https://res.cloudinary.com/ddcvkggle/image/upload/v1747593098/portfolio/default-profile.jpg";
+  const defaultImage = "path/to/your/default-image.jpg";
 
   useEffect(() => {
     fetchProfileData();
@@ -29,12 +26,14 @@ const Dashboard = () => {
   const fetchProfileData = async () => {
     try {
       const data = await getProfile();
+      console.log('Fetched profile data:', data); // Debug log
       if (data) {
-        setProfileData(data);
-        setProfileImage(data.imageUrl);
+        setProfileImage(data.imageUrl || defaultImage);
+        setShortBio(data.shortBio || '');
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
+      setError('Failed to load profile data');
     }
   };
 
@@ -44,34 +43,48 @@ const Dashboard = () => {
 
     try {
       setUploading(true);
-      const { imageUrl } = await uploadProfileImage(file);
-      setProfileImage(imageUrl);
-      setProfileData(prev => ({ ...prev, imageUrl }));
-      await updateProfile({ ...profileData, imageUrl });
+      setError(null);
+
+      // Create FormData
+      const formData = new FormData();
+      formData.append('profileImage', file);
+
+      const response = await uploadProfileImage(formData); // Pass formData instead of file
+      console.log('Upload response:', response); // Debug log
+
+      if (response?.imageUrl) {
+        setProfileImage(response.imageUrl);
+        // Also update the profile with new image URL
+        await updateProfile({ 
+          imageUrl: response.imageUrl,
+          shortBio 
+        });
+      }
     } catch (error) {
       console.error('Upload failed:', error);
-      alert('Failed to upload image');
+      setError('Failed to upload image');
     } finally {
       setUploading(false);
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfileData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   const handleSaveChanges = async () => {
+    if (!shortBio.trim()) {
+      setError('Short bio cannot be empty');
+      return;
+    }
+
     try {
       setSaving(true);
-      await updateProfile(profileData);
+      setError(null);
+      await updateProfile({ 
+        imageUrl: profileImage, 
+        shortBio: shortBio.trim() 
+      });
       alert('Profile updated successfully!');
     } catch (error) {
       console.error('Save failed:', error);
-      alert('Failed to save changes');
+      setError('Failed to save changes');
     } finally {
       setSaving(false);
     }
@@ -148,61 +161,43 @@ const Dashboard = () => {
         </header>
 
         <div className="content-body">
+          {error && <div className="error-message">{error}</div>}
+          
           {activeTab === 'profile' && (
             <div className="profile-section">
               <div className="profile-image-section">
-                <div className="image-container">
-                  <img 
-                    src={profileImage || defaultImage} 
-                    alt="Profile"
-                    className="profile-image"
-                  />
-                  <div className="upload-overlay">
-                    <input 
-                      type="file" 
-                      id="profile-upload" 
-                      hidden 
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      disabled={uploading}
+                <div className="profile-image-section">
+                  <div className="image-container">
+                    <img 
+                      src={profileImage || defaultImage} 
+                      alt="Profile"
+                      className="profile-image"
                     />
-                    <label htmlFor="profile-upload" className={uploading ? 'uploading' : ''}>
-                      {uploading ? 'Uploading...' : 'Change Photo'}
-                    </label>
+                    <div className="upload-overlay">
+                      <input 
+                        type="file" 
+                        id="profile-upload" 
+                        hidden 
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploading}
+                      />
+                      <label htmlFor="profile-upload">
+                        {uploading ? 'Uploading...' : 'Change Photo'}
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
-
               <div className="profile-form">
                 <div className="form-group">
-                  <label>Name</label>
-                  <input 
-                    type="text" 
-                    name="name"
-                    value={profileData.name}
-                    onChange={handleInputChange}
-                    placeholder="Your Name" 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Title</label>
-                  <input 
-                    type="text" 
-                    name="title"
-                    value={profileData.title}
-                    onChange={handleInputChange}
-                    placeholder="e.g. No-Code Solution Expert" 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Bio</label>
+                  <label>Short Bio</label>
                   <textarea 
-                    name="bio"
-                    value={profileData.bio}
-                    onChange={handleInputChange}
-                    placeholder="Write a short bio..."
+                    value={shortBio}
+                    onChange={(e) => setShortBio(e.target.value)}
+                    placeholder="Write a short bio for the homepage..."
                     rows={4}
-                  ></textarea>
+                  />
                 </div>
                 <button 
                   className="save-button"

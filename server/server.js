@@ -4,6 +4,7 @@ const adminRoutes = require('./routes/admin');
 const profileRoutes = require('./routes/profile');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
+const projectsRouter = require('./routes/projects');
 require('dotenv').config();
 
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/contact', require('./routes/contact'));
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/admin', profileRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/admin/projects', projectsRouter);
 
 // Error Handler
 

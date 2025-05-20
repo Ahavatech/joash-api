@@ -30,8 +30,8 @@ const Home = () => {
     };
 
     fetchProfileData();
-    // Poll for updates every 5 seconds while the component is mounted
-    const interval = setInterval(fetchProfileData, 5000);
+    // Poll for updates every 3 seconds while the component is mounted
+    const interval = setInterval(fetchProfileData, 3000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);

@@ -7,10 +7,7 @@ const Projects = () => {
       <div className="projects-content">
         <h2 className="section-title">Projects</h2>
         <p className="section-intro">
-          Over the years, I've mastered a range of no-code tools and platforms that help me bring
-          powerful digital products to life—quickly, efficiently, and without writing traditional code.
-          These are the core tools I use to deliver responsive MVPs, automations, and seamless user
-          experiences:
+          Each project I take on is focused on solving real-world problems using no-code platforms like Bubble and powerful automation tools. From MVPs to sleek landing pages and AI-powered apps, these solutions are built to be fast, functional, and ready to scale.
         </p>
         <div className="projects-grid">
           <div className="project-card">

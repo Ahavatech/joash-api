@@ -94,7 +94,7 @@ const ReviewForm = () => {
           </button>
           {status === 'success' && (
             <p className="success-message">
-              Thank you for your review! It will be displayed after approval.
+              Thank you for your review!
             </p>
           )}
           {status === 'error' && (

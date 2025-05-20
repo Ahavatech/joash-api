@@ -59,24 +59,31 @@ router.put('/profile', async (req, res) => {
 router.post('/upload-profile', upload.single('profileImage'), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+      return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    // Get the secure URL from Cloudinary upload
+    const imageUrl = req.file.path;
+
+    // Update or create profile with new image URL
     let profile = await Profile.findOne();
     if (!profile) {
       profile = new Profile();
     }
 
-    profile.imageUrl = req.file.path;
+    // Update the image URL
+    profile.imageUrl = imageUrl;
     await profile.save();
 
-    res.json({
-      imageUrl: req.file.path,
-      message: 'Profile image uploaded successfully'
+    // Return the secure URL for immediate UI update
+    res.json({ 
+      imageUrl,
+      message: 'Profile image updated successfully' 
     });
+
   } catch (error) {
     console.error('Upload error:', error);
-    res.status(500).json({ message: 'Error uploading file' });
+    res.status(500).json({ error: 'Failed to upload image' });
   }
 });
 
