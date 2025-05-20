@@ -33,20 +33,42 @@ const fallbackData = {
 
 export const getAbout = async () => {
   try {
-    const response = await api.get('/about');
-    return response.data;
+    const response = await fetch('/api/about');
+    if (!response.ok) {
+      throw new Error('Failed to fetch about content');
+    }
+    const data = await response.json();
+    console.log('API Response:', data); // Debug log
+    return data;
   } catch (error) {
-    console.warn('Using fallback data for About section:', error.message);
-    return fallbackData.about;
+    console.error('API Error:', error);
+    throw error;
   }
 };
 
-export const updateAbout = async (aboutData) => {
+export const updateAbout = async (data) => {
   try {
-    const response = await api.put('/about', aboutData);
-    return response.data;
+    const response = await fetch('/api/about', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: data.content,
+        keywords: data.keywords.map(k => ({
+          text: k.text,
+          highlighted: Boolean(k.highlighted)
+        }))
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update about section');
+    }
+
+    return await response.json();
   } catch (error) {
-    console.error('Error updating about:', error);
+    console.error('Update Error:', error);
     throw error;
   }
 };

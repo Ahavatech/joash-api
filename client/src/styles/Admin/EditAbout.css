@@ -1,48 +1,222 @@
+.edit-about {
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.edit-about h2 {
+  color: var(--text-color);
+  margin-bottom: 2rem;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  width: 100%;
+  min-height: 250px;
+  padding: 1.25rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+  resize: vertical;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1);
+  background: #fff;
+}
+
+.keywords-section {
+  margin-top: 3rem;
+}
+
+.keywords-section h3 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
 .keywords-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--background-color);
+  border-radius: 12px;
+  min-height: 100px;
 }
 
 .keyword-item {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 0.75rem;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-.keyword-item input {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.keyword-item.highlighted {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.keyword-text {
+  font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .remove-keyword {
-  background: #ff4444;
-  color: white;
+  background: transparent;
+  color: #ef4444;
   border: none;
-  border-radius: 50%;
   width: 24px;
   height: 24px;
+  border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 1.25rem;
+  padding: 0;
+  line-height: 1;
 }
 
-.add-keyword {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 5px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.add-keyword:hover {
-  background: #45a049;
+.keyword-item.highlighted .remove-keyword {
+  color: #fff;
 }
 
 .remove-keyword:hover {
-  background: #cc0000;
+  background: #ef4444;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.add-keyword-form {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.add-keyword-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.add-keyword-input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1);
+}
+
+.add-keyword-button {
+  background: var(--secondary-color);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.add-keyword-button:hover {
+  background: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(106, 13, 173, 0.2);
+}
+
+.save-button {
+  background: var(--secondary-color);
+  color: #fff;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+  min-width: 160px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.save-button:hover {
+  background: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(106, 13, 173, 0.2);
+}
+
+.save-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  color: #ef4444;
+  background: #fef2f2;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .edit-about {
+    padding: 1.5rem;
+  }
+
+  .keywords-list {
+    padding: 1rem;
+  }
+
+  .keyword-item {
+    width: 100%;
+  }
+
+  .add-keyword-form {
+    flex-direction: column;
+  }
+
+  .add-keyword-button {
+    width: 100%;
+  }
+
+  .save-button {
+    width: 100%;
+  }
 }
