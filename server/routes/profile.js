@@ -87,4 +87,27 @@ router.post('/upload-profile', upload.single('profileImage'), async (req, res) =
   }
 });
 
+// ...existing code...
+
+router.patch('/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { field } = req.body;
+    
+    const review = await Review.findById(id);
+    if (!review) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+
+    // Toggle the specified field (approved or showOnHomepage)
+    review[field] = !review[field];
+    await review.save();
+
+    res.json(review);
+  } catch (error) {
+    console.error('Error updating review status:', error);
+    res.status(500).json({ error: 'Failed to update review status' });
+  }
+});
+
 module.exports = router;

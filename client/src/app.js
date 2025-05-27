@@ -11,6 +11,7 @@ import EditSkills from './components/Admin/EditSkills';
 import EditProjects from './components/Admin/EditProjects';
 import ManageReviews from './components/Admin/ManageReviews';
 import Settings from './components/Admin/Settings';
+import ReviewSubmission from './pages/ReviewSubmission';
 
 function App() {
   return (
@@ -18,62 +19,40 @@ function App() {
       <AdminProvider>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/admin/login" element={<Login />} />
-          <Route 
-            path="/admin" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/dashboard" 
-            element={
+          <Route path="/review" element={<ReviewSubmission />} />
+          <Route path="/admin">
+            <Route path="login" element={<Login />} />
+            <Route path="dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
             } />
-          <Route 
-            path="/admin/edit-about" 
-            element={
+            <Route path="edit-about" element={
               <ProtectedRoute>
                 <EditAbout />
               </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/edit-skills" 
-            element={
+            } />
+            <Route path="edit-skills" element={
               <ProtectedRoute>
                 <EditSkills />
               </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/edit-projects" 
-            element={
+            } />
+            <Route path="edit-projects" element={
               <ProtectedRoute>
                 <EditProjects />
               </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/reviews" 
-            element={
+            } />
+            <Route path="reviews" element={
               <ProtectedRoute>
                 <ManageReviews />
               </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/settings" 
-            element={
+            } />
+            <Route path="settings" element={
               <ProtectedRoute>
                 <Settings />
               </ProtectedRoute>
-            } 
-          />
+            } />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AdminProvider>

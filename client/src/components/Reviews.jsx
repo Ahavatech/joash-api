@@ -1,37 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getApprovedReviews } from '../utils/api';
 import '../styles/Reviews.css';
 
 const Reviews = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Temporary static data until backend is ready
-  const dummyReviews = [
-    {
-      id: 1,
-      name: "Tevin Lowes",
-      position: "CEO",
-      company: "Holmes Inc.",
-      review: "Securing your site is a must. And we got that taken care of, so you don't need to worry."
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      position: "CTO",
-      company: "Tech Solutions",
-      review: "Outstanding work on our MVP. The no-code solution exceeded our expectations."
-    },
-    {
-      id: 3,
-      name: "Mike Chen",
-      position: "Founder",
-      company: "StartupHub",
-      review: "The automation workflows saved us countless hours. Highly recommended!"
-    }
-  ];
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const data = await getApprovedReviews();
+        setReviews(data);
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % dummyReviews.length);
+    setCurrentSlide((prev) => (prev + 1) % reviews.length);
   };
+
+  if (loading) return null;
+  if (reviews.length === 0) return null;
 
   return (
     <section className="reviews" id="reviews">
@@ -39,11 +35,11 @@ const Reviews = () => {
         <h2 className="section-title">Reviews</h2>
         <div className="reviews-slider">
           <div className="review-card">
-            <blockquote>{dummyReviews[currentSlide].review}</blockquote>
+            <blockquote>{reviews[currentSlide].review}</blockquote>
             <div className="review-author">
               <div className="author-info">
-                <h4>{dummyReviews[currentSlide].name}</h4>
-                <p>{dummyReviews[currentSlide].position} at {dummyReviews[currentSlide].company}</p>
+                <h4>{reviews[currentSlide].name}</h4>
+                <p>{reviews[currentSlide].position} at {reviews[currentSlide].company}</p>
               </div>
               <button className="next-review" onClick={nextSlide}>
                 <span>→</span>
@@ -51,7 +47,7 @@ const Reviews = () => {
             </div>
           </div>
           <div className="review-pagination">
-            {dummyReviews.map((_, index) => (
+            {reviews.map((_, index) => (
               <button
                 key={index}
                 className={`pagination-dot ${currentSlide === index ? 'active' : ''}`}

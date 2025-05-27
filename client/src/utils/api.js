@@ -112,18 +112,6 @@ export const getProjects = async () => {
   }
 };
 
-export const getReviews = async () => {
-  try {
-    const response = await api.get('/reviews/approved');
-    return response.data;
-  } catch (error) {
-    console.warn('Using fallback data for Reviews section:', error.message);
-    return fallbackData.reviews;
-  }
-};
-
-// Add these new functions after the existing exports
-
 export const uploadProfileImage = async (formData) => {
   try {
     const response = await api.post('/admin/upload-profile', formData);
@@ -194,7 +182,6 @@ export const updateCredentials = async (credentials) => {
     throw error;
   }
 };
-// ...existing code...
 
 export const addProject = async (formData) => {
   try {
@@ -209,15 +196,61 @@ export const addProject = async (formData) => {
     throw error;
   }
 };
-
-// ...existing code...
-
 export const deleteProject = async (projectId) => {
   try {
-    await api.delete(`/admin/projects/${projectId}`);
+    const response = await api.delete(`/api/projects/${projectId}`);
+    console.log('Delete response:', response); // Debug log
     return true;
   } catch (error) {
     console.error('Error deleting project:', error);
+    throw error;
+  }
+};
+
+export const submitReview = async (reviewData) => {
+  try {
+    const response = await api.post('/reviews/submit', reviewData);
+    return response.data;
+  } catch (error) {
+    console.error('Error submitting review:', error);
+    throw error;
+  }
+};
+
+export const getApprovedReviews = async () => {
+  try {
+    const response = await api.get('/reviews/approved');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    throw error;
+  }
+};
+export const getReviews = async () => {
+  try {
+    const response = await api.get('/reviews');  // Changed from '/reviews/approved'
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    return fallbackData.reviews;
+  }
+};
+
+export const updateReviewStatus = async (reviewId, field) => {
+  try {
+    const response = await api.patch(`/reviews/${reviewId}/status`, { field });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating review status:', error);
+    throw error;
+  }
+};
+export const deleteReview = async (reviewId) => {
+  try {
+    await api.delete(`/api/reviews/${reviewId}`);
+    return true;
+  } catch (error) {
+    console.error('Error deleting review:', error);
     throw error;
   }
 };

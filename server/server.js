@@ -5,6 +5,7 @@ const profileRoutes = require('./routes/profile');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 const projectsRouter = require('./routes/projects');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/bio', require('./routes/bio'));
 app.use('/api/about', require('./routes/about'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/profile', require('./routes/profile'));
 app.use('/api/admin', profileRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/admin/projects', projectsRouter);
@@ -44,4 +46,10 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+//Serve static files from the 'dist' folder
+app.use(express.static(path.join(__dirname, 'dist')));
+// Catch-all route to serve the Vite frontend
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });

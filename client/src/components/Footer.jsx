@@ -3,7 +3,8 @@ import {
   FaLinkedin, 
   FaGithub, 
   FaInstagram, 
-  FaFacebook 
+  FaFacebook,
+  FaEnvelope 
 } from 'react-icons/fa';
 import { SiUpwork } from 'react-icons/si';
 import '../styles/Footer.css';
@@ -14,10 +15,18 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-social">
           <a 
+            href="mailto:joashadeoye@gmail.com"
+            aria-label="Email"
+            className="social-link"
+          >
+            <FaEnvelope />
+          </a>
+          <a 
             href="https://www.linkedin.com/in/joash01/" 
             target="_blank" 
             rel="noopener noreferrer"
             aria-label="LinkedIn"
+            className="social-link"
           >
             <FaLinkedin />
           </a>
@@ -26,6 +35,7 @@ const Footer = () => {
             target="_blank" 
             rel="noopener noreferrer"
             aria-label="GitHub"
+            className="social-link"
           >
             <FaGithub />
           </a>
@@ -34,6 +44,7 @@ const Footer = () => {
             target="_blank" 
             rel="noopener noreferrer"
             aria-label="Instagram"
+            className="social-link"
           >
             <FaInstagram />
           </a>
@@ -42,6 +53,7 @@ const Footer = () => {
             target="_blank" 
             rel="noopener noreferrer"
             aria-label="Upwork"
+            className="social-link"
           >
             <SiUpwork />
           </a>
@@ -50,6 +62,7 @@ const Footer = () => {
             target="_blank" 
             rel="noopener noreferrer"
             aria-label="Facebook"
+            className="social-link"
           >
             <FaFacebook />
           </a>

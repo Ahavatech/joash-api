@@ -46,23 +46,19 @@ router.post('/', upload.single('projectImage'), async (req, res) => {
   }
 });
 
-// Delete project
 router.delete('/:id', async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const { id } = req.params;
+    console.log('Attempting to delete project with ID:', id); // Debug log
+
+    const project = await Project.findByIdAndDelete(id);
     if (!project) {
+      console.log('Project not found with ID:', id); // Debug log
       return res.status(404).json({ error: 'Project not found' });
     }
 
-    // Extract public_id from Cloudinary URL
-    const publicId = project.imageUrl.split('/').slice(-1)[0].split('.')[0];
-    
-    // Delete image from Cloudinary
-    await cloudinary.uploader.destroy(`portfolio/projects/${publicId}`);
-    
-    // Delete project from database
-    await Project.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: 'Project deleted successfully' });
+    console.log('Project deleted successfully:', id); // Debug log
+    res.json({ message: 'Project deleted successfully' });
   } catch (error) {
     console.error('Error deleting project:', error);
     res.status(500).json({ error: 'Failed to delete project' });
