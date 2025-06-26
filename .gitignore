@@ -1,16 +1,13 @@
 # dependencies
-node_modules/
+/node_modules
 
 # environment variables
 .env
-.env.local
-.env.*.local
 
-# production
-/client/build
-/client/dist
+# logs
+logs
+*.log
+npm-debug.log*
 
 # misc
 .DS_Store
-*.log
-npm-debug.log*
